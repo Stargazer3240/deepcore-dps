@@ -1,0 +1,16 @@
+---
+Checks:         
+  - clang-diagnostic-*
+  - clang-analyzer-*
+  - bugprone-*
+  - cert-*
+  - hicpp-*
+  - performance-*
+  - readability-*
+  - modernize-* 
+  - cppcoreguidelines-*
+  - misc-* 
+  - -readability-identifier-length
+  - -modernize-use-trailing-return-type
+...
+
