@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "weapon.h"
+
 namespace libdeepcore::weapons {
 
 const int kGK2Damage{16};
@@ -15,25 +17,27 @@ const float kGK2StunChance{0.15};
 const float kGK2BaseSpread{1.0};
 const float kGK2ArmorBreaking{1.0};
 
-class DeepcoreGK2 {
+class DeepcoreGK2 : public Weapon {
  public:
   static constexpr std::string name_{"Deepcore GK2"};
 
-  [[nodiscard]] int magazine_damage() const { return damage_ * magazine_size_; }
+  [[nodiscard]] int magazine_damage() const override {
+    return damage_ * magazine_size_;
+  }
 
-  [[nodiscard]] float magazine_duration() const {
+  [[nodiscard]] float magazine_duration() const override {
     return float(magazine_size_) / float(rate_of_fire_);
   }
 
-  [[nodiscard]] int total_damage() const {
+  [[nodiscard]] int total_damage() const override {
     return (magazine_size_ + max_ammo_) * damage_;
   }
 
-  [[nodiscard]] float burst_dps() const {
+  [[nodiscard]] float burst_dps() const override {
     return float(magazine_damage()) / magazine_duration();
   }
 
-  [[nodiscard]] float sustained_dps() const {
+  [[nodiscard]] float sustained_dps() const override {
     return float(magazine_damage()) / (magazine_duration() + reload_time_);
   }
 

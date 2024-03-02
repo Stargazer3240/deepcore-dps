@@ -4,7 +4,8 @@
 
 int main() {
   using GK2 = libdeepcore::weapons::DeepcoreGK2;
-  std::cout << GK2::name_ << '\n';
+  GK2 gk2;
+  std::cout << gk2.magazine_damage() << '\n';
 
   return 0;
 }
