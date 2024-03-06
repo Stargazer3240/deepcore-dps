@@ -1,36 +1,55 @@
 #ifndef LIBDEEPCORE_WEAPON_H
 #define LIBDEEPCORE_WEAPON_H
 
-#include <optional>
+#include <array>
+#include <cassert>
 #include <string>
+#include <vector>
 
 namespace libdeepcore::weapons {
 
 struct Mod {
-  std::string name_;
-  std::string description_;
+  std::string name;
+  std::string description;
 };
 
-enum class OverclockType { kClean, kBalanced, kUnstable };
+class ModRow {
+ public:
+  template <size_t n>
+    requires(n == 2 || n == 3)
+  explicit ModRow(const std::array<Mod, n>& r) : row{r.begin(), r.end()} {};
 
-struct ModRow {
-  Mod A_;
-  Mod B_;
-  std::optional<Mod> C_;
+  Mod operator[](char idx) const;
+  [[nodiscard]] auto begin() const { return row.begin(); }
+  [[nodiscard]] auto end() const { return row.end(); }
+
+ private:
+  std::vector<Mod> row;
 };
 
-struct ModTree {
-  ModRow T1_;
-  ModRow T2_;
-  ModRow T3_;
-  ModRow T4_;
-  ModRow T5_;
+const size_t mod_tree_height{5};
+
+class ModTree {
+ public:
+  explicit ModTree(const std::array<ModRow, mod_tree_height>& t) : tree{t} {};
+
+  ModRow operator[](size_t idx) const {
+    assert(idx > 0 && idx <= mod_tree_height);
+    return tree.at(idx - 1);
+  }
+  [[nodiscard]] auto begin() const { return tree.begin(); }
+  [[nodiscard]] auto end() const { return tree.end(); }
+
+ private:
+  std::array<ModRow, mod_tree_height> tree;
 };
+
+enum class OverclockType { clean, balanced, unstable };
 
 struct Overclock {
-  std::string name_;
-  std::string description_;
-  OverclockType type_;
+  std::string name;
+  std::string description;
+  OverclockType type;
 };
 
 class Weapon {

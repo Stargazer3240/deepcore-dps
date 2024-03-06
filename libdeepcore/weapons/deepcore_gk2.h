@@ -7,30 +7,28 @@
 
 namespace libdeepcore::weapons {
 
-const int kGK2Damage{16};
-const float kGK2StunDuration{1.5};
-const int kGK2MagSize{30};
-const int kGK2MaxAmmo{360};
-const int kGK2RateOfFire{8};
-const float kGK2ReloadTime{1.8};
-const float kGK2StunChance{0.15};
-const float kGK2BaseSpread{1.0};
-const float kGK2ArmorBreaking{1.0};
+const int gk2_damage{16};
+const float gk2_stun_duration{1.5};
+const int gk2_mag_size{30};
+const int gk2_max_ammo{360};
+const int gk2_rate_of_fire{8};
+const float gk2_reload_time{1.8};
+const float gk2_stun_chance{0.15};
+const float gk2_base_spread{1.0};
+const float gk2_armor_breaking{1.0};
 
 class DeepcoreGK2 : public Weapon {
  public:
-  static constexpr std::string name_{"Deepcore GK2"};
-
   [[nodiscard]] int magazine_damage() const override {
-    return damage_ * magazine_size_;
+    return damage * magazine_size;
   }
 
   [[nodiscard]] float magazine_duration() const override {
-    return float(magazine_size_) / float(rate_of_fire_);
+    return float(magazine_size) / float(rate_of_fire);
   }
 
   [[nodiscard]] int total_damage() const override {
-    return (magazine_size_ + max_ammo_) * damage_;
+    return (magazine_size + max_ammo) * damage;
   }
 
   [[nodiscard]] float burst_dps() const override {
@@ -38,19 +36,22 @@ class DeepcoreGK2 : public Weapon {
   }
 
   [[nodiscard]] float sustained_dps() const override {
-    return float(magazine_damage()) / (magazine_duration() + reload_time_);
+    return float(magazine_damage()) / (magazine_duration() + reload_time);
   }
 
+  static constexpr std::string kName{"Deepcore GK2"};
+  // static constexpr ModTree mod_tree_();
+
  private:
-  int damage_{kGK2Damage};
-  float weakpoint_stun_duration_{kGK2StunDuration};
-  int magazine_size_{kGK2MagSize};
-  int max_ammo_{kGK2MaxAmmo};
-  int rate_of_fire_{kGK2RateOfFire};
-  float reload_time_{kGK2ReloadTime};
-  float weakpoint_stun_chance_{kGK2StunChance};
-  float base_spread_{kGK2BaseSpread};
-  float armor_breaking_{kGK2ArmorBreaking};
+  int damage{gk2_damage};
+  float weakpoint_stun_duration{gk2_stun_duration};
+  int magazine_size{gk2_mag_size};
+  int max_ammo{gk2_max_ammo};
+  int rate_of_fire{gk2_rate_of_fire};
+  float reload_time{gk2_reload_time};
+  float weakpoint_stun_chance{gk2_stun_chance};
+  float base_spread{gk2_base_spread};
+  float armor_breaking{gk2_armor_breaking};
 };
 
 }  // namespace libdeepcore::weapons
