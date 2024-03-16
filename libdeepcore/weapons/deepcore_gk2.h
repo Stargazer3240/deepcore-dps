@@ -1,24 +1,25 @@
-#ifndef LIBDEEPCORE_DEEPCORE_GK2_H
-#define LIBDEEPCORE_DEEPCORE_GK2_H
+#ifndef LIBDEEPCORE_WEAPONS_DEEPCORE_GK2_H_
+#define LIBDEEPCORE_WEAPONS_DEEPCORE_GK2_H_
 
-#include <string>
+#include <string_view>
 
 #include "weapon.h"
 
 namespace libdeepcore::weapons {
 
-const int gk2_damage{16};
-const float gk2_stun_duration{1.5};
-const int gk2_mag_size{30};
-const int gk2_max_ammo{360};
-const int gk2_rate_of_fire{8};
-const float gk2_reload_time{1.8};
-const float gk2_stun_chance{0.15};
-const float gk2_base_spread{1.0};
-const float gk2_armor_breaking{1.0};
-
 class DeepcoreGK2 : public Weapon {
  public:
+  static constexpr std::string_view name{"Deepcore GK2"};
+  static constexpr int kDamage{16};
+  static constexpr float kStunDuration{1.5};
+  static constexpr int kMagSize{30};
+  static constexpr int kMaxAmmo{360};
+  static constexpr int kRateOfFire{8};
+  static constexpr float kReloadTime{1.8};
+  static constexpr float kStunChance{0.15};
+  static constexpr float kBaseSpread{1.0};
+  static constexpr float kArmorBreaking{1.0};
+
   [[nodiscard]] int magazine_damage() const override {
     return damage * magazine_size;
   }
@@ -39,21 +40,20 @@ class DeepcoreGK2 : public Weapon {
     return float(magazine_damage()) / (magazine_duration() + reload_time);
   }
 
-  static constexpr std::string kName{"Deepcore GK2"};
   // static constexpr ModTree mod_tree_();
 
  private:
-  int damage{gk2_damage};
-  float weakpoint_stun_duration{gk2_stun_duration};
-  int magazine_size{gk2_mag_size};
-  int max_ammo{gk2_max_ammo};
-  int rate_of_fire{gk2_rate_of_fire};
-  float reload_time{gk2_reload_time};
-  float weakpoint_stun_chance{gk2_stun_chance};
-  float base_spread{gk2_base_spread};
-  float armor_breaking{gk2_armor_breaking};
+  int damage{kDamage};
+  float weakpoint_stun_duration{kStunDuration};
+  int magazine_size{kMagSize};
+  int max_ammo{kMaxAmmo};
+  int rate_of_fire{kRateOfFire};
+  float reload_time{kReloadTime};
+  float weakpoint_stun_chance{kStunChance};
+  float base_spread{kBaseSpread};
+  float armor_breaking{kArmorBreaking};
 };
 
 }  // namespace libdeepcore::weapons
 
-#endif  // LIBDEEPCORE_DEEPCORE_GK2_H
+#endif  // LIBDEEPCORE_WEAPONS_DEEPCORE_GK2_H_

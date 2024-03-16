@@ -12,7 +12,5 @@ Checks:
   - misc-* 
   - -readability-identifier-length
   - -modernize-use-trailing-return-type
-  - -cppcoreguidelines-special-member-functions
-  - -hicpp-special-member-functions
 ...
 
