@@ -5,11 +5,11 @@
 
 #include "weapon.h"
 
-namespace libdeepcore::weapons {
+namespace libdeepcore {
 
 class DeepcoreGK2 : public Weapon {
  public:
-  static constexpr std::string_view name{"Deepcore GK2"};
+  static constexpr std::string_view kName{"Deepcore GK2"};
   static constexpr int kDamage{16};
   static constexpr float kStunDuration{1.5};
   static constexpr int kMagSize{30};
@@ -21,15 +21,15 @@ class DeepcoreGK2 : public Weapon {
   static constexpr float kArmorBreaking{1.0};
 
   [[nodiscard]] int magazine_damage() const override {
-    return damage * magazine_size;
+    return damage_ * magazine_size_;
   }
 
   [[nodiscard]] float magazine_duration() const override {
-    return float(magazine_size) / float(rate_of_fire);
+    return float(magazine_size_) / float(rate_of_fire_);
   }
 
   [[nodiscard]] int total_damage() const override {
-    return (magazine_size + max_ammo) * damage;
+    return (magazine_size_ + max_ammo_) * damage_;
   }
 
   [[nodiscard]] float burst_dps() const override {
@@ -37,23 +37,23 @@ class DeepcoreGK2 : public Weapon {
   }
 
   [[nodiscard]] float sustained_dps() const override {
-    return float(magazine_damage()) / (magazine_duration() + reload_time);
+    return float(magazine_damage()) / (magazine_duration() + reload_time_);
   }
 
   // static constexpr ModTree mod_tree_();
 
  private:
-  int damage{kDamage};
-  float weakpoint_stun_duration{kStunDuration};
-  int magazine_size{kMagSize};
-  int max_ammo{kMaxAmmo};
-  int rate_of_fire{kRateOfFire};
-  float reload_time{kReloadTime};
-  float weakpoint_stun_chance{kStunChance};
-  float base_spread{kBaseSpread};
-  float armor_breaking{kArmorBreaking};
+  int damage_{kDamage};
+  float weakpoint_stun_duration_{kStunDuration};
+  int magazine_size_{kMagSize};
+  int max_ammo_{kMaxAmmo};
+  int rate_of_fire_{kRateOfFire};
+  float reload_time_{kReloadTime};
+  float weakpoint_stun_chance_{kStunChance};
+  float base_spread_{kBaseSpread};
+  float armor_breaking_{kArmorBreaking};
 };
 
-}  // namespace libdeepcore::weapons
+}  // namespace libdeepcore
 
 #endif  // LIBDEEPCORE_WEAPONS_DEEPCORE_GK2_H_

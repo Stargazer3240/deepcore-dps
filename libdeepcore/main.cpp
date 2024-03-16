@@ -7,7 +7,7 @@ int main() {
   using namespace libdeepcore::weapons;
 
   Mod m;
-  std::cout << DeepcoreGK2::name << '\n';
+  std::cout << DeepcoreGK2::kName << '\n';
 
   return 0;
 }

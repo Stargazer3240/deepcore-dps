@@ -7,7 +7,7 @@
 #include <string>
 #include <variant>
 
-namespace libdeepcore::weapons {
+namespace libdeepcore {
 
 struct Mod {
   std::string name;
@@ -19,23 +19,22 @@ class ModRow {
   using TwoModsRow = std::array<Mod, 2>;
   using ThreeModsRow = std::array<Mod, 3>;
 
-  template <typename Row>
-    requires(std::is_same_v<Row, TwoModsRow> ||
-             std::is_same_v<Row, ThreeModsRow>)
-  explicit ModRow(const Row& r) : row_{r} {};
+  template <typename T>
+    requires(std::is_same_v<T, TwoModsRow> || std::is_same_v<T, ThreeModsRow>)
+  explicit ModRow(const T& r) : row_{r} {};
 
   Mod operator[](char idx) const {
-    return is_two_mod_row ? get_mod<TwoModsRow>(idx)
-                          : get_mod<ThreeModsRow>(idx);
+    return is_two_mod_row_ ? get_mod<TwoModsRow>(idx)
+                           : get_mod<ThreeModsRow>(idx);
   }
 
   [[nodiscard]] auto begin() const {
-    return is_two_mod_row ? std::get<TwoModsRow>(row_).begin()
-                          : std::get<ThreeModsRow>(row_).begin();
+    return is_two_mod_row_ ? std::get<TwoModsRow>(row_).begin()
+                           : std::get<ThreeModsRow>(row_).begin();
   };
   [[nodiscard]] auto end() const {
-    return is_two_mod_row ? std::get<TwoModsRow>(row_).end()
-                          : std::get<ThreeModsRow>(row_).end();
+    return is_two_mod_row_ ? std::get<TwoModsRow>(row_).end()
+                           : std::get<ThreeModsRow>(row_).end();
   };
 
  private:
@@ -59,27 +58,29 @@ class ModRow {
   }
 
   std::variant<TwoModsRow, ThreeModsRow> row_;
-  bool is_two_mod_row = std::holds_alternative<TwoModsRow>(row_);
+  // To be used with common variant tests for the row data member.
+  bool is_two_mod_row_ = std::holds_alternative<TwoModsRow>(row_);
 };
 
-const size_t mod_tree_height{5};
 class ModTree {
  public:
-  explicit ModTree(const std::array<ModRow, mod_tree_height>& t) : tree{t} {};
+  static constexpr size_t kTreeHeight{5};
+
+  explicit ModTree(const std::array<ModRow, kTreeHeight>& t) : tree_{t} {};
 
   ModRow operator[](const size_t idx) const {
-    assert(idx > 0 && idx <= mod_tree_height);
-    return tree.at(idx - 1);
+    assert(idx > 0 && idx <= kTreeHeight);
+    return tree_.at(idx - 1);
   }
 
-  [[nodiscard]] auto begin() const { return tree.begin(); }
-  [[nodiscard]] auto end() const { return tree.end(); }
+  [[nodiscard]] auto begin() const { return tree_.begin(); }
+  [[nodiscard]] auto end() const { return tree_.end(); }
 
  private:
-  std::array<ModRow, mod_tree_height> tree;
+  std::array<ModRow, kTreeHeight> tree_;
 };
 
-enum class OverclockType { clean, balanced, unstable };
+enum class OverclockType { kClean, kBalanced, kUnstable };
 
 struct Overclock {
   std::string name;
@@ -99,6 +100,6 @@ class Weapon {
   [[nodiscard]] virtual float sustained_dps() const = 0;
 };
 
-}  // namespace libdeepcore::weapons
+}  // namespace libdeepcore
 
 #endif  // LIBDEEPCORE_WEAPONS_WEAPON_H_
