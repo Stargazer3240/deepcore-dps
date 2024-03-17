@@ -5,13 +5,38 @@
 #include <cassert>
 #include <string>
 #include <variant>
+#include <vector>
 
 namespace libdeepcore {
 
+enum class ChangeType { kAdditive, kMultiplicative };
+
+struct ModChange;
+
 struct Mod {
   std::string name;
-  std::string description;
+  std::vector<ModChange> changes;
+  std::string description{AssembleDescription()};
+
+  std::string AssembleDescription() const;
+
+  friend bool operator==(const Mod& l, const Mod& r) {
+    return l.name == r.name && l.description == r.description;
+  }
 };
+
+struct ModChange {
+  ChangeType type;
+  std::variant<int, float> value;
+  std::string text;
+
+  friend bool operator==(const ModChange& l, const ModChange& r) {
+    return l.type == r.type && l.value == r.value && l.text == r.text;
+  }
+};
+
+std::string ModChangeValueToString(const std::variant<int, float>& value,
+                                   bool is_additive);
 
 class ModRow {
  public:
@@ -78,18 +103,18 @@ struct Overclock {
   OverclockType type;
 };
 
-struct Build {
+struct WeaponBuild {
   using ModList = std::array<Mod, ModTree::kTreeHeight>;
   ModList mods;
   Overclock overclock;
 };
 
-struct BuildString {
+struct WeaponBuildString {
   std::string mods;
   std::string overclock;
 };
 
-BuildString InputBuildParser(std::string_view build);
+WeaponBuildString InputBuildParser(std::string_view build);
 
 class Weapon {
  public:
@@ -101,8 +126,11 @@ class Weapon {
   virtual float BurstDps() const = 0;
   virtual float SustainedDps() const = 0;
   virtual ModTree tree() const = 0;
-  virtual Build current_build() const = 0;
+  virtual WeaponBuild current_build() const = 0;
   virtual std::string current_build_str() const = 0;
+
+ private:
+  virtual void UpdateWeaponStats() = 0;
 };
 
 }  // namespace libdeepcore

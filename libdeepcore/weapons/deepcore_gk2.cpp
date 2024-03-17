@@ -1,7 +1,5 @@
 #include "deepcore_gk2.h"
 
-#include <string_view>
-
 namespace libdeepcore {
 
 void DeepcoreGK2::set_current_build(std::string_view input_build) {
@@ -9,16 +7,16 @@ void DeepcoreGK2::set_current_build(std::string_view input_build) {
   current_build_str_ = input_build;
 }
 
-Build DeepcoreGK2::AssembleBuild(std::string_view input_build) const {
+WeaponBuild DeepcoreGK2::AssembleBuild(std::string_view input_build) const {
   auto [mods, oc] = InputBuildParser(input_build);
-  Build b;
+  WeaponBuild b;
   b.mods = AssembleMods(mods);
   b.overclock = AssembleOverclock(oc[0]);
   return b;
 }
 
-Build::ModList DeepcoreGK2::AssembleMods(std::string_view mods) const {
-  Build::ModList m;
+WeaponBuild::ModList DeepcoreGK2::AssembleMods(std::string_view mods) const {
+  WeaponBuild::ModList m;
   for (int i{0}; char c : mods) {
     if (c != '-') {
       // Tree "[]" operator is one-based indexed.
@@ -39,6 +37,18 @@ Overclock DeepcoreGK2::AssembleOverclock(char c) const {
     return overclock_list_[oc_idx];
   }
   return Overclock();
+}
+
+void DeepcoreGK2::UpdateWeaponStats() {
+  // UpdateDamage();
+  // UpdateStunDuration();
+  // UpdateMagSize();
+  // UpdateMaxAmmo();
+  // UpdateRateOfFire();
+  // UpdateReloadTime();
+  // UpdateStunChance();
+  // UpdateBaseSpread();
+  // UpdateArmorBreaking();
 }
 
 }  // namespace libdeepcore
