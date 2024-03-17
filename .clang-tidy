@@ -5,6 +5,7 @@ Checks:
   - bugprone-*
   - cert-*
   - hicpp-*
+  - -hicpp-special-member-functions
   - performance-*
   - readability-*
   - modernize-* 
@@ -12,5 +13,8 @@ Checks:
   - misc-* 
   - -readability-identifier-length
   - -modernize-use-trailing-return-type
+CheckOptions:
+  - key: cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
+    value: true
 ...
 

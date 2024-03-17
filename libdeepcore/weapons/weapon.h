@@ -90,7 +90,6 @@ struct Overclock {
 
 class Weapon {
  public:
-  Weapon() = default;
   virtual ~Weapon() = default;
 
   [[nodiscard]] virtual int magazine_damage() const = 0;

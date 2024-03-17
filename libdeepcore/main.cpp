@@ -4,7 +4,7 @@
 #include "weapons/weapon.h"
 
 int main() {
-  using namespace libdeepcore::weapons;
+  using namespace libdeepcore;
 
   Mod m;
   std::cout << DeepcoreGK2::kName << '\n';
