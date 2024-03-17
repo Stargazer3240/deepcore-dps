@@ -3,9 +3,7 @@
 
 #include <array>
 #include <cassert>
-#include <stdexcept>
 #include <string>
-#include <string_view>
 #include <variant>
 
 namespace libdeepcore {
@@ -13,10 +11,6 @@ namespace libdeepcore {
 struct Mod {
   std::string name;
   std::string description;
-
-  // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-  Mod(std::string_view name, std::string_view desc)
-      : name(name), description(desc){};
 };
 
 class ModRow {
@@ -29,50 +23,39 @@ class ModRow {
       : row_{ThreeModsRow{a, b, c}} {};
 
   Mod operator[](char idx) const {
-    return is_two_mod_row_ ? get_mod<TwoModsRow>(idx)
-                           : get_mod<ThreeModsRow>(idx);
+    return is_two_mods_row_ ? GetMod<TwoModsRow>(idx)
+                            : GetMod<ThreeModsRow>(idx);
   };
 
   [[nodiscard]] auto begin() const {
-    return is_two_mod_row_ ? std::get<TwoModsRow>(row_).begin()
-                           : std::get<ThreeModsRow>(row_).begin();
+    return is_two_mods_row_ ? std::get<TwoModsRow>(row_).begin()
+                            : std::get<ThreeModsRow>(row_).begin();
   };
   [[nodiscard]] auto end() const {
-    return is_two_mod_row_ ? std::get<TwoModsRow>(row_).end()
-                           : std::get<ThreeModsRow>(row_).end();
+    return is_two_mods_row_ ? std::get<TwoModsRow>(row_).end()
+                            : std::get<ThreeModsRow>(row_).end();
   };
 
  private:
   template <typename Row>
-  [[nodiscard]] Mod get_mod(char idx) const {
+  [[nodiscard]] Mod GetMod(char mod) const {
     Row r = std::get<Row>(row_);
-    switch (idx) {
-      case 'A':
-        return r.at(0);
-      case 'B':
-        return r.at(1);
-      case 'C':
-        if (std::is_same_v<Row, ThreeModsRow>) {
-          return r.at(2);
-        }
-      default:
-        std::string mod_range =
-            std::is_same_v<Row, TwoModsRow> ? "[A-B]" : "[A-C]";
-        throw std::out_of_range("Not a valid mod slot " + mod_range + "!");
-    }
+    int i = mod - 'A';
+    assert(i >= 0 && i < r.size());
+    return r.at(i);
   }
 
   std::variant<TwoModsRow, ThreeModsRow> row_;
-  // To be used with common variant tests for the row data member.
-  bool is_two_mod_row_ = std::holds_alternative<TwoModsRow>(row_);
+  // Used in expressions that check for the variant held data type.
+  bool is_two_mods_row_ = std::holds_alternative<TwoModsRow>(row_);
 };
 
 class ModTree {
  public:
   static constexpr size_t kTreeHeight{5};
 
-  explicit ModTree(const ModRow& t1, const ModRow& t2, const ModRow& t3,
-                   const ModRow& t4, const ModRow& t5)
+  ModTree(const ModRow& t1, const ModRow& t2, const ModRow& t3,
+          const ModRow& t4, const ModRow& t5)
       : tree_{t1, t2, t3, t4, t5} {};
 
   ModRow operator[](const size_t idx) const {
@@ -93,22 +76,33 @@ struct Overclock {
   std::string name;
   std::string description;
   OverclockType type;
-
-  // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-  Overclock(std::string_view name, std::string_view desc, OverclockType type)
-      : name{name}, description{desc}, type{type} {};
 };
+
+struct Build {
+  using ModList = std::array<Mod, ModTree::kTreeHeight>;
+  ModList mods;
+  Overclock overclock;
+};
+
+struct BuildString {
+  std::string mods;
+  std::string overclock;
+};
+
+BuildString InputBuildParser(std::string_view build);
 
 class Weapon {
  public:
   virtual ~Weapon() = default;
 
-  [[nodiscard]] virtual int magazine_damage() const = 0;
-  [[nodiscard]] virtual float magazine_duration() const = 0;
-  [[nodiscard]] virtual int total_damage() const = 0;
-  [[nodiscard]] virtual float burst_dps() const = 0;
-  [[nodiscard]] virtual float sustained_dps() const = 0;
-  [[nodiscard]] virtual ModTree tree() const = 0;
+  virtual int MagazineDamage() const = 0;
+  virtual float MagazineDuration() const = 0;
+  virtual int TotalDamage() const = 0;
+  virtual float BurstDps() const = 0;
+  virtual float SustainedDps() const = 0;
+  virtual ModTree tree() const = 0;
+  virtual Build current_build() const = 0;
+  virtual std::string current_build_str() const = 0;
 };
 
 }  // namespace libdeepcore

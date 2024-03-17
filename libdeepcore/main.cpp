@@ -7,8 +7,12 @@ int main() {
   using namespace libdeepcore;
 
   DeepcoreGK2 gk2;
-  std::cout << DeepcoreGK2::kName << '\n';
-  std::cout << gk2.tree()[5]['A'].name << '\n';
+  gk2.set_current_build("CBABC7");
+  Build b = gk2.current_build();
+  for (const Mod& m : b.mods) {
+    std::cout << m.name << " | " << m.description << '\n';
+  }
+  std::cout << b.overclock.name << " | " << b.overclock.description;
 
   return 0;
 }
