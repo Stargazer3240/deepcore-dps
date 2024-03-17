@@ -5,6 +5,7 @@
 #include <cassert>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <variant>
 
 namespace libdeepcore {
@@ -12,6 +13,10 @@ namespace libdeepcore {
 struct Mod {
   std::string name;
   std::string description;
+
+  // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
+  Mod(std::string_view name, std::string_view desc)
+      : name(name), description(desc){};
 };
 
 class ModRow {
@@ -19,14 +24,14 @@ class ModRow {
   using TwoModsRow = std::array<Mod, 2>;
   using ThreeModsRow = std::array<Mod, 3>;
 
-  template <typename T>
-    requires(std::is_same_v<T, TwoModsRow> || std::is_same_v<T, ThreeModsRow>)
-  explicit ModRow(const T& r) : row_{r} {};
+  ModRow(const Mod& a, const Mod& b) : row_{TwoModsRow{a, b}} {};
+  ModRow(const Mod& a, const Mod& b, const Mod& c)
+      : row_{ThreeModsRow{a, b, c}} {};
 
   Mod operator[](char idx) const {
     return is_two_mod_row_ ? get_mod<TwoModsRow>(idx)
                            : get_mod<ThreeModsRow>(idx);
-  }
+  };
 
   [[nodiscard]] auto begin() const {
     return is_two_mod_row_ ? std::get<TwoModsRow>(row_).begin()
@@ -66,7 +71,9 @@ class ModTree {
  public:
   static constexpr size_t kTreeHeight{5};
 
-  explicit ModTree(const std::array<ModRow, kTreeHeight>& t) : tree_{t} {};
+  explicit ModTree(const ModRow& t1, const ModRow& t2, const ModRow& t3,
+                   const ModRow& t4, const ModRow& t5)
+      : tree_{t1, t2, t3, t4, t5} {};
 
   ModRow operator[](const size_t idx) const {
     assert(idx > 0 && idx <= kTreeHeight);
@@ -86,6 +93,10 @@ struct Overclock {
   std::string name;
   std::string description;
   OverclockType type;
+
+  // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
+  Overclock(std::string_view name, std::string_view desc, OverclockType type)
+      : name{name}, description{desc}, type{type} {};
 };
 
 class Weapon {
@@ -97,6 +108,7 @@ class Weapon {
   [[nodiscard]] virtual int total_damage() const = 0;
   [[nodiscard]] virtual float burst_dps() const = 0;
   [[nodiscard]] virtual float sustained_dps() const = 0;
+  [[nodiscard]] virtual ModTree tree() const = 0;
 };
 
 }  // namespace libdeepcore
