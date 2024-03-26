@@ -14,7 +14,7 @@ class Mod {
   struct Effect {
     bool is_additive;
     std::variant<int, float> value;
-    std::string_view text;
+    std::string text;
   };
 
   Mod() = default;
@@ -22,12 +22,11 @@ class Mod {
   Mod(std::string_view name, const std::vector<Effect>& v);
 
  private:
-  std::string AssembleDescription() const;
   friend bool operator==(const Mod& l, const Mod& r);
 
-  std::string_view name_;
+  std::string name_;
   std::vector<Effect> effect_list_;
-  std::string_view description_{AssembleDescription()};
+  std::string_view description_;
 };
 
 class ModTier {
@@ -39,8 +38,8 @@ class ModTier {
   ModTier(const Mod& a, const Mod& b, const Mod& c);
 
   Mod operator[](char idx) const;
-  auto begin() const;
-  auto end() const;
+  [[nodiscard]] auto begin() const;
+  [[nodiscard]] auto end() const;
 
  private:
   template <typename Row>
@@ -58,11 +57,11 @@ class ModTree {
  public:
   static constexpr std::size_t kTreeHeight{5};
 
-  ModTree(const std::array<ModTier, kTreeHeight>& tree);
+  explicit ModTree(const std::array<ModTier, kTreeHeight>& tree);
 
-  ModTier operator[](const size_t idx) const;
-  auto begin() const;
-  auto end() const;
+  ModTier operator[](size_t idx) const;
+  [[nodiscard]] auto begin() const;
+  [[nodiscard]] auto end() const;
 
  private:
   std::array<ModTier, kTreeHeight> tree_;
@@ -93,14 +92,11 @@ class Weapon {
 
   virtual ~Weapon() = default;
 
-  virtual int MagazineDamage() const = 0;
-  virtual float MagazineDuration() const = 0;
-  virtual int TotalDamage() const = 0;
-  virtual float BurstDps() const = 0;
-  virtual float SustainedDps() const = 0;
-  virtual ModTree tree() const = 0;
-  virtual Build current_build() const = 0;
-  virtual std::string_view current_build_str() const = 0;
+  [[nodiscard]] virtual float MagazineDamage() const = 0;
+  [[nodiscard]] virtual float MagazineDuration() const = 0;
+  [[nodiscard]] virtual float TotalDamage() const = 0;
+  [[nodiscard]] virtual float BurstDps() const = 0;
+  [[nodiscard]] virtual float SustainedDps() const = 0;
 
  private:
   virtual void UpdateWeaponStats() = 0;

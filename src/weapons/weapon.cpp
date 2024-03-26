@@ -2,25 +2,24 @@
 
 namespace deepcore_dps {
 
-inline Mod::Mod(std::string_view name, const Effect& e) : name_{name} {
+Mod::Mod(std::string_view name, const Effect& e) : name_{name} {
   effect_list_.push_back(e);
 }
 
-inline Mod::Mod(std::string_view name, const std::vector<Effect>& v)
+Mod::Mod(std::string_view name, const std::vector<Effect>& v)
     : name_{name}, effect_list_{v} {}
 
 bool operator==(const Mod& l, const Mod& r) {
   return l.name_ == r.name_ && l.description_ == r.description_;
 }
 
-inline bool operator==(const Mod::Effect& l, const Mod::Effect& r) {
+bool operator==(const Mod::Effect& l, const Mod::Effect& r) {
   return l.is_additive == r.is_additive && l.value == r.value &&
          l.text == r.text;
 }
 
-inline ModTier::ModTier(const Mod& a, const Mod& b)
-    : tier_{TwoModsTier{a, b}} {}
-inline ModTier::ModTier(const Mod& a, const Mod& b, const Mod& c)
+ModTier::ModTier(const Mod& a, const Mod& b) : tier_{TwoModsTier{a, b}} {}
+ModTier::ModTier(const Mod& a, const Mod& b, const Mod& c)
     : tier_{ThreeModsTier{a, b, c}} {}
 
 Mod ModTier::operator[](char idx) const {
@@ -39,16 +38,15 @@ auto ModTier::end() const {
              : std::get<ThreeModsTier>(tier_).end();
 }
 
-inline ModTree::ModTree(const std::array<ModTier, kTreeHeight>& tree)
-    : tree_{tree} {}
+ModTree::ModTree(const std::array<ModTier, kTreeHeight>& tree) : tree_{tree} {}
 
-inline ModTier ModTree::operator[](const size_t idx) const {
+ModTier ModTree::operator[](const size_t idx) const {
   assert(idx > 0 && idx <= kTreeHeight);
   return tree_.at(idx - 1);
 }
 
-inline auto ModTree::begin() const { return tree_.begin(); }
-inline auto ModTree::end() const { return tree_.end(); }
+auto ModTree::begin() const { return tree_.begin(); }
+auto ModTree::end() const { return tree_.end(); }
 
 WeaponBuildString InputBuildParser(std::string_view build) {
   std::string s{build};

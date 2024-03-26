@@ -20,6 +20,6 @@ CheckOptions:
   - key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
     value: true
   - key: readability-magic-numbers.IgnoredIntegerValues
-    value: {1, 2, 3, 4, 5}
+    value: 1; 2; 3; 4; 5
 ...
 

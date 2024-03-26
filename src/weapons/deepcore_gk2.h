@@ -9,11 +9,11 @@ namespace deepcore_dps {
 
 class DeepcoreGK2 : public Weapon {
  public:
-  int MagazineDamage() const override;
-  float MagazineDuration() const override;
-  int TotalDamage() const override;
-  float BurstDps() const override;
-  float SustainedDps() const override;
+  [[nodiscard]] float MagazineDamage() const override;
+  [[nodiscard]] float MagazineDuration() const override;
+  [[nodiscard]] float TotalDamage() const override;
+  [[nodiscard]] float BurstDps() const override;
+  [[nodiscard]] float SustainedDps() const override;
 
  private:
   static constexpr std::string_view kName{"Deepcore GK2"};
